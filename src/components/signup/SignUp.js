@@ -1,9 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -20,9 +20,7 @@ function Copyright(props) {
       align="center"
       {...props}>
       {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        theneurate.in
-      </Link>{" "}
+      theneurate.in
       {new Date().getFullYear()}
       {"."}
     </Typography>
@@ -35,11 +33,12 @@ const SignUp = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-      phoneNumber: data.get("phoneNumber"),
-    });
+    if (data)
+      console.log({
+        email: data.get("email"),
+        password: data.get("password"),
+        phoneNumber: data.get("phoneNumber"),
+      });
   };
 
   return (
@@ -161,9 +160,7 @@ const SignUp = () => {
               </Button>
               <Grid container justifyContent="flex-end">
                 <Grid item>
-                  <Link href="#" variant="body2">
-                    Already have an account? Sign in
-                  </Link>
+                  <Link to="/signin">Already have an account? Sign in</Link>
                 </Grid>
               </Grid>
             </Box>

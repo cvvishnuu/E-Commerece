@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
+import MuiLink from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -19,9 +20,7 @@ function Copyright(props) {
       align="center"
       {...props}>
       {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
-        theneurate.in
-      </Link>{" "}
+      theneurate.in
       {new Date().getFullYear()}
       {"."}
     </Typography>
@@ -31,13 +30,54 @@ function Copyright(props) {
 const theme = createTheme();
 
 const SignIn = () => {
+  const [formValues, setFormValues] = useState({
+    email: {
+      value: "",
+      error: false,
+      errorMessage: "You must enter your email",
+    },
+    password: {
+      value: "",
+      error: false,
+      errorMessage: "You must enter your password",
+    },
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({
+      ...formValues,
+      [name]: {
+        ...formValues[name],
+        value,
+      },
+    });
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+
+    const formFields = Object.keys(formValues);
+    let newFormValues = { ...formValues };
+
+    for (let index = 0; index < formFields.length; index++) {
+      const currentField = formFields[index];
+      const currentValue = formValues[currentField].value;
+
+      if (currentValue === "") {
+        newFormValues = {
+          ...newFormValues,
+          [currentField]: {
+            ...newFormValues[currentField],
+            error: true,
+          },
+        };
+      } else {
+        // API call here
+        console.log("filled");
+      }
+    }
+    setFormValues(newFormValues);
   };
 
   return (
@@ -93,6 +133,7 @@ const SignIn = () => {
             <Box
               component="form"
               noValidate
+              onChange={handleChange}
               onSubmit={handleSubmit}
               sx={{ mt: 1 }}>
               <TextField
@@ -100,10 +141,15 @@ const SignIn = () => {
                 required
                 fullWidth
                 id="email"
+                value={formValues.email.value}
                 label="Email Address"
                 name="email"
                 autoComplete="email"
                 autoFocus
+                error={formValues.email.error}
+                helperText={
+                  formValues.email.error && formValues.email.errorMessage
+                }
               />
               <TextField
                 margin="normal"
@@ -114,8 +160,12 @@ const SignIn = () => {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={formValues.password.value}
+                error={formValues.password.error}
+                helperText={
+                  formValues.password.error && formValues.password.errorMessage
+                }
               />
-
               <Button
                 type="submit"
                 fullWidth
@@ -125,14 +175,12 @@ const SignIn = () => {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <MuiLink href="#" variant="body2">
                     Forgot password?
-                  </Link>
+                  </MuiLink>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
+                  <Link to="/signup">Don't have an account? Sign Up</Link>
                 </Grid>
               </Grid>
               <Copyright sx={{ mt: 5 }} />
