@@ -72,10 +72,11 @@ const SignIn = () => {
             error: true,
           },
         };
-      } else {
-        // API call here
-        console.log("filled");
       }
+    }
+    if (formValues.email.value && formValues.password.value) {
+      // Call API here
+      console.log("filled");
     }
     setFormValues(newFormValues);
   };

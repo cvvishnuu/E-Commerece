@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -30,15 +30,70 @@ function Copyright(props) {
 const theme = createTheme();
 
 const SignUp = () => {
+  const [formValues, setFormValues] = useState({
+    firstName: {
+      value: "",
+      error: false,
+      errorMessage: "You must enter your first name",
+    },
+    lastName: {
+      value: "",
+      error: false,
+      errorMessage: "You must enter your last name",
+    },
+    email: {
+      value: "",
+      error: false,
+      errorMessage: "You must enter your email",
+    },
+    phoneNumber: {
+      value: "",
+      error: false,
+      errorMessage: "You must enter your phone number",
+    },
+    password: {
+      value: "",
+      error: false,
+      errorMessage: "You must enter your password",
+    },
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({
+      ...formValues,
+      [name]: {
+        ...formValues[name],
+        value,
+      },
+    });
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    if (data)
-      console.log({
-        email: data.get("email"),
-        password: data.get("password"),
-        phoneNumber: data.get("phoneNumber"),
-      });
+
+    const formFields = Object.keys(formValues);
+    let newFormValues = { ...formValues };
+
+    for (let index = 0; index < formFields.length; index++) {
+      const currentField = formFields[index];
+      const currentValue = formValues[currentField].value;
+
+      if (currentValue === "") {
+        newFormValues = {
+          ...newFormValues,
+          [currentField]: {
+            ...newFormValues[currentField],
+            error: true,
+          },
+        };
+      }
+    }
+    if (formValues.email.value && formValues.password.value) {
+      // Call API here
+      console.log("filled");
+    }
+    setFormValues(newFormValues);
   };
 
   return (
@@ -94,6 +149,7 @@ const SignUp = () => {
             <Box
               component="form"
               noValidate
+              onChange={handleChange}
               onSubmit={handleSubmit}
               sx={{ mt: 3 }}>
               <Grid container spacing={2}>
@@ -103,9 +159,15 @@ const SignUp = () => {
                     name="firstName"
                     required
                     fullWidth
+                    value={formValues.firstName.value}
                     id="firstName"
                     label="First Name"
                     autoFocus
+                    error={formValues.firstName.error}
+                    helperText={
+                      formValues.firstName.error &&
+                      formValues.firstName.errorMessage
+                    }
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -116,6 +178,12 @@ const SignUp = () => {
                     label="Last Name"
                     name="lastName"
                     autoComplete="family-name"
+                    value={formValues.lastName.value}
+                    error={formValues.lastName.error}
+                    helperText={
+                      formValues.lastName.error &&
+                      formValues.lastName.errorMessage
+                    }
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -126,6 +194,11 @@ const SignUp = () => {
                     label="Email Address"
                     name="email"
                     autoComplete="email"
+                    value={formValues.email.value}
+                    error={formValues.email.error}
+                    helperText={
+                      formValues.email.error && formValues.email.errorMessage
+                    }
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -137,6 +210,12 @@ const SignUp = () => {
                     id="phoneNumber"
                     label="Phone Number"
                     name="phoneNumber"
+                    value={formValues.phoneNumber.value}
+                    error={formValues.phoneNumber.error}
+                    helperText={
+                      formValues.phoneNumber.error &&
+                      formValues.phoneNumber.errorMessage
+                    }
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -148,6 +227,12 @@ const SignUp = () => {
                     type="password"
                     id="password"
                     autoComplete="new-password"
+                    value={formValues.password.value}
+                    error={formValues.password.error}
+                    helperText={
+                      formValues.password.error &&
+                      formValues.password.errorMessage
+                    }
                   />
                 </Grid>
               </Grid>
